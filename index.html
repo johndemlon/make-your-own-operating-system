@@ -1,0 +1,56 @@
+<html>
+<head>
+<title>How To Make An Operating System</title>
+</head>
+<body>
+<nav>
+<hr>
+<center><br><h3>How To Make An Operating System</h3><br></center>
+<center><a href="#1">boot prossess</a>   <a href="#2">boot loader</a>   <a href="#3">print32</a>   <a href="#4">types</a>   <a href="#5">gdt</a>  <a href="#6">idt</a>   <a href="#7">inturrupts</a>   <a href="#8">keyboard</a></center>
+<hr>
+</nav>
+<div id="1">
+<center><br><h3>boot prossess</h3><br></center>
+<center><br><p>when yout turn pc on it will send signsl to cpu that read from sectors if it found the bootable file boot it so that will go to ram to set the address but we need to change the address to that where th kernel is we do it in assembly the we can do coding in c++ ! .</p><br></center>
+</div>
+<hr>
+<div id="2">
+<center><br><h3>bootloader</h3><br></center>
+<center><br><p>in assembly(16 bit real mode) we set address to 0x7c00 that we can interacte with other address so write assembly code to read the sectors after reading it we use the resieved data to know where address should we go to .</p><br></center>
+</div>
+<hr>
+<div id="3">
+<center><br><h3>print32</h3><br></center>
+<center><br><p>intract with video card with address 0x8b00 2 bytes (hex) one is subbed [color, back-color] another byte is for text (hex) so it would look like this [text,[color, back-color]](hex) but the limit so we made a loop that it's 24y 60x that's good for a shell now we will create a simple tick for commands its just this sign "> " that's ower printf .</p><br></center>
+</div>
+<hr>
+<div id="4">
+<center><br><h3>types</h3><br></center>
+<center><br><p>we need to make a file that can prevent compiler from making an int 16 bit and miss wth the varaibles so we made a file to set the varaible and how much data is there we called it types.h</p><br></center>
+</div>
+<hr>
+<div id="5">
+<center><br><h3>gdt</h3><br></center>
+<center><br><p>global discriptor table is a table that have address , size , flags but we need an inturrupt discriptor table witch halt the cpu to excute hardware remmeber 32 bit mode protected so after keypress it halts then it search for segment that where idt commes but idt need info about segment so we can say that the gdt is a part of idt and here comes gdt so the ram should look like this [kernel code,kernel data]... [program code,program data] the gdt structure should look like this 8 bytes for gdt [pointer(1 bit){expanded},{flags(4 bit),limit(4 bit)}{expanded,subbed},access(1 bit){expanded},access(1 bit){expanded},pointer(1 bit){expanded},pointer(16 bit),size(16 bit)]
+but this thing the g++ compiler will change some of the code so it will turn better we need to prevent it so we add this in the class "__attribute__((packed))" then in the gdt.h code we need to construct and add the functions for gdt.cpp code in the gdt code we will set the unused and null byte to zero "(0,0,0)" but the data and code bytes we add code(0,64*1024*1024,0x9A) and data(0,64*1024*1024,0x92) then we tell the cpu to use it "asm volatile("lgdt (%0)": :"p" (((uint8_t *) i)+2));" then we make that this target[6] = 0x40 that will tell the cpu it's 16 bit but these bytes we cant address the ram with it so we add virtual bytes but this only legal if they are 1  But resieving it we will reverse it so we can send and read it but the last bit should only reversed if it is not 0x40 instruction on target[6] .</p><br></center>
+</div>
+<hr>
+<div id="6">
+<center><br><h3>idt</h3><br></center>
+<center><br><p>when you want to contact the hardware you need the cpu to interractc with pic (programmble intrupt controller) this you have two componenets mutiplexer dimultiplexer so they are neede to read and write data to pic now the pic is reseiving data from keyboard but it just ignore it so we need to give it instruction in asmbelly to read and write data these we have 4 things the read 8bit,8bit[slow],16bit,32bit and write 8bit,8bit[slow],16bit,32bit the compiler willhave a problem when setting read 8bit from 16 bit it will do that for you but read 16 bit from 8bit is ilegal it wont cmpile for you </p><br></center>
+</div>
+<hr>
+<div id="7">
+<center><br><h3>inturrupts</h3><br></center>
+<center><br><p>now we will communicate with hardware but we need to make pic resieve data so we make this in assembly then the resieved data are are [inturupt number ,codesegmentselectoroffset,handler,discriptorrights,discriptortype] but to  reseive it need to push data to stack but we will ruin some data so we will make different inturups handlers and we push and pop the stacks (reversed = 0) after that you need to tell the cpu to use it so you need use idt and set size 256 *size of [gate discriptor] -1 and base is uint32_t and load idt then start inturrupt ther are 2 types of interupts master and slave and you need to send to them data and command and add 20 to them because if you resieved 1 it already in the cpu do increase the number then tell the master pic that he is a master and slave tell him he is slave but the pic will give you one inturrupt because you did not tell it to countenue doing this but you are just got from assembly you juped into static c++ object you need to have a pointer to kernel_main  so yuo need to make a funcion that if the pic stopped you need to deactivat it and start inturrept by sti assembly command now you returned to kernel main we need to make a deactivate funcion to read all the inturrupts you need to make an if statment between and operator intuppt number if its equal or bigger than 0x20 and smaller than 0x30 you need to make another one for the slave .</p><br></center>
+</div>
+<hr>
+<center><br><h2>hardware</h2><br></center>
+<hr>
+<div id="8">
+<center><br><h3>keyboard</h3><br></center>
+<center><br><p>you need to activate the intuppt and connect to the port for the keyboard and get states of key press you will resieve two datas one for down pers other for up you need to get the down only just if statment if this hex is bigger dont show it after that do a switch so this will show you the chracters than hex .</p><br></center>
+</div>
+<footer><center><br><p>By John Demlon</p><br></center></footer>
+</body>
+</html>
